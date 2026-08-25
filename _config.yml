@@ -1,0 +1,49 @@
+# Site settings
+title: Stanley Du | Personal Website
+author: Stanley Du
+tagline: Software Engineer
+location: Northwestern University
+email: dustanley07@gmail.com
+description: >-
+  Personal website and blog of Stanley Du.
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "" # the base hostname & protocol for your site, e.g. https://example.com
+
+# Social links (edit these to match your accounts)
+github_username: dudu-theman
+linkedin_username: stanleydu2028
+
+# Profile photo shown on the home page
+avatar: /assets/images/profile.jpeg
+
+# Only these pages show up in the top nav
+header_pages:
+  - about.markdown
+  - projects.markdown
+  - engineering.markdown
+  - tidbits.markdown
+
+# Show post excerpts on the home page
+show_excerpts: true
+
+# How many posts to show under "Recent posts"
+recent_posts_limit: 5
+
+# Build settings
+theme: minima
+
+# Minima 2.5 is written against the old Sass syntax (@import, lighten(), darken()).
+# We can't change the theme's own files, so quiet the deprecation notices it emits.
+sass:
+  quiet_deps: true
+  silence_deprecations:
+    - import
+    - global-builtin
+    - color-functions
+plugins:
+  - jekyll-feed
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor/

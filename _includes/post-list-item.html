@@ -1,0 +1,28 @@
+{%- comment -%}
+  One entry in a post list.
+  Params: post (required), compact (optional) - hides the excerpt.
+{%- endcomment -%}
+{%- assign post = include.post -%}
+<li>
+  <h3>
+    <a class="post-link" href="{{ post.url | relative_url }}">
+      {{ post.title | escape }}
+    </a>
+  </h3>
+  <p class="post-meta">
+    <svg class="post-meta-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
+    {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+    {%- assign words = post.content | number_of_words -%}
+    <span>{{ words | divided_by: 200 | plus: 1 }} minute read &middot; {{ post.date | date: date_format }}</span>
+    {%- if post.categories contains 'tidbits' -%}
+      <a class="post-tag" href="{{ "/tidbits/" | relative_url }}">Lil Tidbits</a>
+    {%- elsif post.categories contains 'engineering' -%}
+      <a class="post-tag" href="{{ "/engineering/" | relative_url }}">Engineering Blogs</a>
+    {%- endif -%}
+  </p>
+  {%- unless include.compact -%}
+    {%- if site.show_excerpts -%}
+      {{ post.excerpt }}
+    {%- endif -%}
+  {%- endunless -%}
+</li>

@@ -1,0 +1,65 @@
+---
+layout: default
+---
+
+<div class="home home-grid">
+
+  <aside class="profile-card">
+    {%- if site.avatar -%}
+      <img class="profile-avatar" src="{{ site.avatar | relative_url }}" alt="{{ site.author | escape }}" />
+    {%- endif -%}
+    <h2 class="profile-name">{{ site.author | default: site.title | escape }}</h2>
+    {%- if site.tagline -%}
+      <p class="profile-tagline">{{ site.tagline }}</p>
+    {%- endif -%}
+    {%- include social-links.html -%}
+  </aside>
+
+  <div class="home-main">
+    {%- if page.title -%}
+      <h1 class="page-heading">{{ page.title }}</h1>
+    {%- endif -%}
+
+    {{ content }}
+
+    {%- comment -%}
+      To pin a post, add `pinned: true` to its front matter. Pinned posts appear
+      in their own section above Recent posts, and are left out of Recent posts
+      so nothing shows up twice. Order them with `pin_order: 1` (lower first);
+      posts without pin_order fall back to newest-first.
+    {%- endcomment -%}
+    {%- assign pinned_posts = site.posts | where: "pinned", true | sort: "pin_order" -%}
+
+    {%- comment -%}
+      Recent posts = the union of the Engineering Blogs and Lil Tidbits
+      categories, newest first (site.posts is already sorted by date descending),
+      minus anything currently pinned.
+    {%- endcomment -%}
+    {%- assign feed_posts = site.posts | where_exp: "post", "post.categories contains 'engineering' or post.categories contains 'tidbits'" | where_exp: "post", "post.pinned != true" -%}
+
+    {%- if pinned_posts.size > 0 -%}
+      <h2 class="post-list-heading">
+        <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 3v2h-1v5l2 2v2h-4.5v6l-.5 1-.5-1v-6H7v-2l2-2V5H8V3h8z"/></svg>
+        {{ page.pinned_title | default: "Pinned" }}
+      </h2>
+      <ul class="post-list">
+        {%- for post in pinned_posts -%}
+          {%- include post-list-item.html post=post -%}
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    {%- if feed_posts.size > 0 -%}
+      <h2 class="post-list-heading">{{ page.list_title | default: "Recent posts" }}</h2>
+      <ul class="post-list">
+        {%- assign posts_limit = site.recent_posts_limit | default: 5 -%}
+        {%- for post in feed_posts limit: posts_limit -%}
+          {%- include post-list-item.html post=post -%}
+        {%- endfor -%}
+      </ul>
+
+      <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | relative_url }}">via RSS</a></p>
+    {%- endif -%}
+  </div>
+
+</div>
