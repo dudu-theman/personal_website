@@ -7,7 +7,7 @@ email: dustanley07@gmail.com
 description: >-
   Personal website and blog of Stanley Du.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. https://example.com
+url: "https://dudu-theman.github.io" # base hostname & protocol (used for feed.xml + SEO tags)
 
 # Social links (edit these to match your accounts)
 github_username: dudu-theman
