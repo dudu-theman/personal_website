@@ -14,6 +14,19 @@ $grey-color: #7a7a7a;
 
 @import "minima";
 
+// ---------- Links ----------
+
+// Minima darkens visited links to darken($brand-color, 15%), which lands on a
+// teal dark enough to read as black. The result is that a footer or a post list
+// looks inconsistent depending on which links you happen to have clicked, so
+// visited and unvisited match instead.
+//
+// Kept early on purpose: it ties with rules like `.profile-links a` on
+// specificity, so anything later that sets its own link colour still wins.
+a:visited {
+  color: $brand-color;
+}
+
 // ---------- Typography ----------
 
 h1, h2, h3, h4, h5, h6 {

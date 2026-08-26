@@ -1,7 +1,7 @@
 ---
 layout: category
 title: Lil Tidbits
-subtitle: Small tidbits of stuff I'm learning.
+subtitle: Bits here and there.
 category: tidbits
 compact: true
 permalink: /tidbits/

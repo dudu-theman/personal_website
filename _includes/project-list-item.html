@@ -4,8 +4,12 @@
 {%- endcomment -%}
 {%- assign project = include.project -%}
 <li>
+  {%- comment -%}
+    The title goes to the live app when there is one, so the headline link is the
+    project itself. "Details" below is what leads to the writeup on this site.
+  {%- endcomment -%}
   <h3>
-    <a class="post-link" href="{{ project.url | relative_url }}">
+    <a class="post-link" href="{{ project.demo | default: project.url | relative_url }}">
       {{ project.title | escape }}
     </a>
   </h3>
@@ -29,9 +33,6 @@
     <a href="{{ project.url | relative_url }}">Details</a>
     {%- if project.repo -%}
       &middot; <a href="{{ project.repo }}">GitHub</a>
-    {%- endif -%}
-    {%- if project.demo -%}
-      &middot; <a href="{{ project.demo }}">Live demo</a>
     {%- endif -%}
   </p>
 </li>

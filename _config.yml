@@ -19,8 +19,8 @@ avatar: /assets/images/profile.jpeg
 # Only these pages show up in the top nav
 header_pages:
   - about.markdown
-  - projects.markdown
   - engineering.markdown
+  - projects.markdown
   - tidbits.markdown
 
 # Show post excerpts on the home page

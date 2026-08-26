@@ -8,6 +8,7 @@ blurb: >-
 year: 2026
 status: Live
 order: 1
+demo: https://ai-spotify-app.vercel.app/
 stack: [Flask, Celery, Postgres, Redis, S3, React]
 mermaid: true
 ---
