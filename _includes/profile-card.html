@@ -1,0 +1,14 @@
+{%- comment -%}
+  The left-hand profile sidebar. Rendered by _layouts/default.html, so it
+  appears on every page rather than only the home page.
+{%- endcomment -%}
+<aside class="profile-card">
+  {%- if site.avatar -%}
+    <img class="profile-avatar" src="{{ site.avatar | relative_url }}" alt="{{ site.author | escape }}" />
+  {%- endif -%}
+  <h2 class="profile-name">{{ site.author | default: site.title | escape }}</h2>
+  {%- if site.tagline -%}
+    <p class="profile-tagline">{{ site.tagline }}</p>
+  {%- endif -%}
+  {%- include social-links.html -%}
+</aside>

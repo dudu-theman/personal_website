@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: "en" }}">
+
+  {%- comment -%}
+    Overrides minima 2.5's default.html. Identical to the theme's, except the
+    content is wrapped in the two-column page shell so the profile sidebar shows
+    up on every page instead of just the home page.
+  {%- endcomment -%}
+
+  {%- include head.html -%}
+
+  <body>
+
+    {%- include header.html -%}
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <div class="page-grid">
+          {%- include profile-card.html -%}
+          <div class="page-main">
+            {{ content }}
+          </div>
+        </div>
+      </div>
+    </main>
+
+    {%- include footer.html -%}
+
+  </body>
+
+</html>

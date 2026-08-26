@@ -56,20 +56,25 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-// ---------- Home: sidebar + main column ----------
+// ---------- Page shell: sidebar + main column ----------
+// Applied by _layouts/default.html, so every page gets the profile sidebar,
+// not just the home page.
 
-.home-grid {
+.page-grid {
   display: flex;
   align-items: flex-start;
   gap: calc(#{$spacing-unit} * 2);
   padding-top: calc(#{$spacing-unit} * 0.5);
 }
 
-.home-main {
+// No max-width: the column takes whatever the sidebar leaves.
+.page-main {
   flex: 1 1 auto;
   min-width: 0;
-  max-width: 680px;
+}
 
+// Home-page typography only; the column sizing above is shared.
+.home {
   > h1:first-child,
   > h2:first-child {
     margin-top: 0;
@@ -89,6 +94,9 @@ h1, h2, h3, h4, h5, h6 {
 .profile-card {
   flex: 0 0 260px;
   width: 260px;
+  // Keeps the card in view while a long post scrolls past it.
+  position: sticky;
+  top: $spacing-unit;
 }
 
 .profile-avatar {
@@ -204,13 +212,14 @@ h1, h2, h3, h4, h5, h6 {
 // ---------- Small screens ----------
 
 @media screen and (max-width: $on-palm) {
-  .home-grid {
+  .page-grid {
     display: block;
   }
 
   .profile-card {
     width: auto;
     margin-bottom: $spacing-unit;
+    position: static;
   }
 
   .site-nav .page-link:not(:last-child) {
@@ -221,7 +230,7 @@ h1, h2, h3, h4, h5, h6 {
 // ---------- Category pages (Engineering / Notes) ----------
 
 .category-page {
-  max-width: 680px;
+  max-width: 780px;
 
   .page-heading {
     margin-bottom: 8px;
@@ -277,7 +286,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .projects-page,
 .project {
-  max-width: 760px;
+  max-width: 820px;
 }
 
 .project-list > li {
@@ -406,10 +415,12 @@ pre.mermaid {
 
 // ---------- Posts ----------
 
-// Minima runs post content out to the full $content-width (1240px), which is
-// far too wide to read comfortably. Match the other pages instead.
+// This cap predates the sidebar. Minima used to run post content out to the full
+// $content-width, so 760px was there to keep lines readable; now the profile
+// sidebar already takes 260px plus the gap, and .page-main bounds the rest. The
+// extra cap on top of that just left an unused right margin.
 .post {
-  max-width: 760px;
+  max-width: 860px;
 }
 
 .post-header .post-title {

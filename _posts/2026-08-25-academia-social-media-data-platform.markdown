@@ -137,7 +137,7 @@ object instead of the whole thing.
 ### The File Format: Parquet
 
 **Our users want a lot of rows and only a few columns.** A post carries an ID and text, but
-also language, a created_at timestamp, and other metadata — 12 columns in all. But
+also language, a created_at timestamp, and other metadata totaling to 12 columns. But
 researchers mostly care about just the text, and maybe the ID.
 
 Columnar layout is what makes that pattern cheap. If the main query is an OLAP query, we
@@ -167,8 +167,8 @@ this dedup. A tradeoff we're allowing here is that until the cron job runs, we a
 this is rare enough for us to accept it. 
 
 **Compaction is only safe if commits are atomic.** Streaming ingest produces small files that we eventually
-want to compact in order to prevent degrading query speeds. That means rewriting files underneath live readers —
-and on a Hive table there is no atomic way to swap the old files for the new ones. With Iceberg's snapshot system, 
+want to compact in order to prevent degrading query speeds. That means rewriting files underneath live readers,
+but on a Hive table there is no atomic way to swap the old files for the new ones. With Iceberg's snapshot system, 
 we're able to atomically switch versions from pre-compaction to post-compaction. 
 
 ### The Catalog: Glue
