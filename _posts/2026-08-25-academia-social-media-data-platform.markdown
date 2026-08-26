@@ -94,7 +94,7 @@ flowchart TB
 
 #### Maintenance
 
-Nothing above ever rewrites a file it already wrote. That is a separate system, on a timer.
+Cron jobs that clean up our data and optimize query speeds.
 
 ```mermaid
 flowchart TB
@@ -142,7 +142,7 @@ researchers mostly care about just the text, and maybe the ID.
 
 Columnar layout is what makes that pattern cheap. If the main query is an OLAP query, we
 don't want to pull down whole posts just to read one column of each. Each page in a columnar
-file holds contiguous entries from a single column rather than whole rows, so a reader can
+file holds contiguoufs entries from a single column rather than whole rows, so a reader can
 fetch only the columns a query actually asks for. Put that together with ranged GETs and it
 is the difference between dragging back every byte we have stored and pulling a handful of
 byte ranges.
