@@ -1,0 +1,37 @@
+{%- comment -%}
+  One entry in the projects list.
+  Params: project (required).
+{%- endcomment -%}
+{%- assign project = include.project -%}
+<li>
+  <h3>
+    <a class="post-link" href="{{ project.url | relative_url }}">
+      {{ project.title | escape }}
+    </a>
+  </h3>
+  <p class="post-meta project-meta">
+    {%- if project.year -%}<span>{{ project.year }}</span>{%- endif -%}
+    {%- if project.status -%}
+      <span class="project-status">{{ project.status }}</span>
+    {%- endif -%}
+  </p>
+  {%- if project.blurb -%}
+    <p class="project-blurb">{{ project.blurb }}</p>
+  {%- endif -%}
+  {%- if project.stack -%}
+    <ul class="stack-list">
+      {%- for tech in project.stack -%}
+        <li>{{ tech }}</li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+  <p class="project-links">
+    <a href="{{ project.url | relative_url }}">Details</a>
+    {%- if project.repo -%}
+      &middot; <a href="{{ project.repo }}">GitHub</a>
+    {%- endif -%}
+    {%- if project.demo -%}
+      &middot; <a href="{{ project.demo }}">Live demo</a>
+    {%- endif -%}
+  </p>
+</li>

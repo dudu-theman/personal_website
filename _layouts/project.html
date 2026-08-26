@@ -1,0 +1,49 @@
+---
+layout: default
+---
+
+{%- comment -%}
+  Detail page for a single entry in the _projects collection.
+  Set `mermaid: true` in the front matter to render ```mermaid fences.
+{%- endcomment -%}
+
+<article class="project">
+  <header class="project-header">
+    <h1 class="page-heading">{{ page.title | escape }}</h1>
+
+    {%- if page.tagline -%}
+      <p class="category-subtitle">{{ page.tagline }}</p>
+    {%- endif -%}
+
+    <p class="post-meta project-meta">
+      {%- if page.year -%}<span>{{ page.year }}</span>{%- endif -%}
+      {%- if page.status -%}
+        <span class="project-status">{{ page.status }}</span>
+      {%- endif -%}
+    </p>
+
+    {%- if page.stack -%}
+      <ul class="stack-list">
+        {%- for tech in page.stack -%}
+          <li>{{ tech }}</li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    {%- if page.repo or page.demo -%}
+      <p class="project-links">
+        {%- if page.repo -%}<a href="{{ page.repo }}">GitHub</a>{%- endif -%}
+        {%- if page.repo and page.demo -%} &middot; {%- endif -%}
+        {%- if page.demo -%}<a href="{{ page.demo }}">Live demo</a>{%- endif -%}
+      </p>
+    {%- endif -%}
+  </header>
+
+  <div class="project-content">
+    {{ content }}
+  </div>
+
+  <p class="project-back">
+    <a href="{{ "/projects/" | relative_url }}">&larr; All projects</a>
+  </p>
+</article>

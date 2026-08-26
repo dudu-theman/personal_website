@@ -29,8 +29,20 @@ show_excerpts: true
 # How many posts to show under "Recent posts"
 recent_posts_limit: 5
 
+# Projects live in _projects/ as a collection, one file per project.
+# Each gets its own page at /projects/<filename>/ and is auto-listed on /projects/.
+collections:
+  projects:
+    output: true
+    permalink: /projects/:name/
+
 # Build settings
 theme: minima
+
+# Post table of contents stops at h3, so h4 can be used for structure inside a
+# subsection without cluttering the contents list.
+kramdown:
+  toc_levels: 1..3
 
 # Minima 2.5 is written against the old Sass syntax (@import, lighten(), darken()).
 # We can't change the theme's own files, so quiet the deprecation notices it emits.

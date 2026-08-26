@@ -1,0 +1,18 @@
+{%- comment -%}
+  Overrides minima 2.5's head.html. Identical to the theme's, plus the opt-in
+  mermaid loader so any page with `mermaid: true` can render diagrams.
+{%- endcomment -%}
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {%- seo -%}
+  <link rel="stylesheet" href="{{ "/assets/main.css" | relative_url }}">
+  {%- feed_meta -%}
+  {%- if page.mermaid -%}
+    {%- include mermaid.html -%}
+  {%- endif -%}
+  {%- if jekyll.environment == 'production' and site.google_analytics -%}
+    {%- include google-analytics.html -%}
+  {%- endif -%}
+</head>
