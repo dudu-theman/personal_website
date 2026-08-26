@@ -142,7 +142,7 @@ researchers mostly care about just the text, and maybe the ID.
 
 Columnar layout is what makes that pattern cheap. If the main query is an OLAP query, we
 don't want to pull down whole posts just to read one column of each. Each page in a columnar
-file holds contiguoufs entries from a single column rather than whole rows, so a reader can
+file holds contiguous entries from a single column rather than whole rows, so a reader can
 fetch only the columns a query actually asks for. Put that together with ranged GETs and it
 is the difference between dragging back every byte we have stored and pulling a handful of
 byte ranges.
@@ -198,6 +198,8 @@ path and the dead letter path failed, so it needs special attention.
 
 **What's actually arriving?** Piecharts and breakdowns of the amount of data that's arriving into our system. We collect
 posts, reposts, likes, and follows, so we break down how much of each data is coming into our system per buffer flush, and also for the last 24 hours. 
+
+![Our Grafana dashboard for the ingester]({{ "/assets/images/grafana-dashboard.png" | relative_url }})
 
 ## What I Learned
 **1. The importance of Experiments** There were many times where we would come up with possible solutions to a problem, but think, 
