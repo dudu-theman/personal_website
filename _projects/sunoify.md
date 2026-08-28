@@ -3,8 +3,7 @@ layout: project
 title: Sunoify
 tagline: AI music generation and streaming.
 blurb: >-
-  You give it a prompt, Suno writes the song, and it lands in a personal library
-  and a public feed.
+  Spotify for Suno
 year: 2026
 status: Live
 order: 1
