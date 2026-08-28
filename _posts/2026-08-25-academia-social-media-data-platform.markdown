@@ -52,8 +52,9 @@ In this blog, I'll be going over the first, and other blogs will dive into the l
 
 ## Gathering Live Data
 
-Our app forms a websocket connection to Bluesky's Jetstream, where we store rows in a buffer before flushing to object storage.
-A cursor keeps track of where we are, so reconnects know where we left off. 
+Bluesky is an app built on an open protocol, so every post, like, and follow is a signed record living lives on a Personal Data Server, and a relay crawls those servers and republishes everything as a public firehose.
+
+Our app forms a websocket connection to [Bluesky's Jetstream](https://bsky.network/docs/jetstream) (the binary-decoded version of the firehose), where we store rows in a buffer before flushing to object storage. A cursor keeps track of where we are, so reconnects know where we left off.
 
 ### Architecture Diagram
 
