@@ -22,7 +22,7 @@ What we're building is a multi-TB dataset of Bluesky and Reddit posts that resea
 When working with Professor William Brady's psychology lab at the Kellogg School of Management, 
 a common request from grad students was social media data. Every time, the process required back and 
 forth between the engineers (us) and the grad students to communicate and help them get their data. 
-By building out this platform, we're providing gigs (on its way to terabytes) of data to users, accessible with just one query.
+By building out this platform, we're providing terabytes of data to users, accessible with just one query.
 
 ## What We Tried (and what failed)
 
@@ -93,7 +93,7 @@ terabyte scale.
 **Our users want a lot of rows and only a few columns.** For example, "Give me the last
 10000 posts starting from August 23rd 2026" or "Which 10 posts got the most likes this week?"
 
-**OLAP vs OLTP** The main way we think about the difference is that 
+**OLAP vs OLTP** One way we think about the difference is that 
 OLTP is about getting a lot of columns on a few rows, whereas OLAP is about getting a lot of rows
 on a few columns. Our users are therefore mainly making OLAP queries. 
 
