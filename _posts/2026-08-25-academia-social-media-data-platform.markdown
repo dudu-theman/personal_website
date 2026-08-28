@@ -8,12 +8,11 @@ mermaid: true
 repo: https://github.com/METResearchGroup/lab_data_integrations_interface
 ---
 
-Industry platforms are built to forget: value decays, storage costs don't, and a 90-day window covers almost every commercial use. A psychology paper on political discourse during an election needs the years nobody kept.
+Data collection can demand more time from an academic researcher than conducting the research itself. APIs exist, but academics are researchers, not software engineers. Academic researchers can spend weeks gathering data just to support a single point in an appendix, only to repeat the entire process for their next project. 
 
-In other words, data is hard to obtain. And for psychology researchers just looking to gather some social media
-posts for their next project, the last thing they want to do is spend hours prompting Claude and
-waiting on scripts to run. So we collect it up front instead - currently 100 GB across Bluesky
-(Reddit coming soon), growing by 30 million rows a day.
+In industry and large research institutions, specialized software engineering teams build complex data pipelines so analysts can access information instantly. Our goal is to bring that into academia.
+
+What we're building is a multi-TB dataset of Bluesky and Reddit posts that researchers can use in minutes, not weeks, eliminating tedious collection work and returning hundreds of hours back to researchers.
 
 * TOC placeholder — kramdown replaces this list with the real table of contents
 {:toc}
@@ -25,7 +24,7 @@ a common request from grad students was social media data. Every time, the proce
 forth between the engineers (us) and the grad students to communicate and help them get their data. 
 By building out this platform, we're providing gigs (on its way to terabytes) of data to users, accessible with just one query.
 
-## Initial Approaches
+## What We Tried (and what failed)
 
 At first, we tried using Bluesky's AppView API to ingest data, then ran it through a preprocessing,
 feature generation, and curation pipeline. Two things kept it from being a platform:
@@ -62,62 +61,17 @@ A cursor keeps track of where we are, so reconnects know where we left off.
 
 One process reads the firehose, buffers what it parses, and commits batches to Iceberg.
 
-```mermaid
-flowchart TB
-  JS[Jetstream WebSocket<br/>wantedCollections filter]
-
-  subgraph Process["bluesky_ingestion_jetstream — one process"]
-    Net[network — connect,<br/>reconnect w/ backoff]
-    Parse[event_parsing — commit → row]
-    Buf[storage — 4 buffers<br/>flush @ 2GB or 30min]
-    Sink[sinks — IcebergSink<br/>retry, then dead-letter]
-    Cur[storage — CursorTracker]
-    Net --> Parse --> Buf --> Sink
-    Net -.-> Cur
-  end
-
-  subgraph AWS
-    Glue[Glue catalog<br/>bluesky_raw]
-    S3[(S3 — Iceberg tables<br/>posts / likes / reposts / follows)]
-    DL[(S3 — dead letter)]
-    DDB[(DynamoDB — resume cursor)]
-    Glue --- S3
-  end
-
-  JS --> Net
-  Sink --> Glue
-  Sink -. on failure .-> DL
-  Cur -- after every flush --> DDB
-  DDB -- on restart --> Net
-  Process -. OTel .-> Graf[Grafana Cloud<br/>metrics + logs]
-```
+![ingestion system design]({{ "/assets/images/ingestion-architecture.png" | relative_url }})
 
 #### Maintenance
 
-Cron jobs that clean up our data and optimize query speeds.
+Our S3 flushes happen at either 2 GB or 30 minutes, and given that we partition by date, 
+we're creating at least 48 files within a partition alone. This is a lot of small data files, plus 
+Iceberg metadata files that S3 has to store. In addition, duplicates are possible across runs.
 
-```mermaid
-flowchart TB
-  Sched[EventBridge Scheduler<br/>daily and weekly]
-  SFN[Step Functions<br/>one state machine, a job per schedule]
+Therefore, it is imperative that we have cron jobs running to dedup, compact, and delete post-compaction artifacts. 
 
-  subgraph Ath["Athena statements"]
-    Dedup[dedup<br/>writes position delete files]
-    Opt[OPTIMIZE<br/>bin-packs small files]
-    Vac[VACUUM<br/>expires snapshots, sweeps orphans]
-  end
-
-  Tables[(S3 — Iceberg tables)]
-
-  Sched --> SFN
-  SFN --> Dedup
-  SFN --> Opt
-  SFN --> Vac
-  Dedup --> Tables
-  Opt --> Tables
-  Vac --> Tables
-  SFN -. failures .-> Alarm[CloudWatch alarm<br/>SNS email]
-```
+![maintenance system design]({{ "/assets/images/maintenance-architecture.png" | relative_url }})
 
 ## Database Design
 
@@ -126,26 +80,27 @@ each one there because the layer beneath it doesn't do the job alone: S3 holds b
 Parquet gives those bytes a shape, Iceberg turns a pile of files into a table, Glue makes
 that table addressable by name, and Athena answers questions about it.
 
+![database visual]({{ "/assets/images/database-layers.png" | relative_url }})
+
 ### The Bytes: S3
 
 Object storage is the cheap, durable, effectively unbounded floor, which is what we need at
 terabyte scale. 
 
-S3 gives us the ranged GET, where a reader can ask for a specific byte range of an
-object instead of the whole thing. 
-
 ### The File Format: Parquet
 
-**Our users want a lot of rows and only a few columns.** A post carries an ID and text, but
-also language, a created_at timestamp, and other metadata totaling to 12 columns. But
-researchers mostly care about just the text, and maybe the ID.
+**Our users want a lot of rows and only a few columns.** For example, "Give me the last
+10000 posts starting from August 23rd 2026" or "Which 10 posts got the most likes this week?"
+
+**OLAP vs OLTP** The main way we think about the difference is that 
+OLTP is about getting a lot of columns on a few rows, whereas OLAP is about getting a lot of rows
+on a few columns. Our users are therefore mainly making OLAP queries. 
 
 Columnar layout is what makes that pattern cheap. If the main query is an OLAP query, we
 don't want to pull down whole posts just to read one column of each. Each page in a columnar
 file holds contiguous entries from a single column rather than whole rows, so a reader can
-fetch only the columns a query actually asks for. Put that together with ranged GETs and it
-is the difference between dragging back every byte we have stored and pulling a handful of
-byte ranges.
+fetch only the columns a query actually asks for. It is the difference between dragging back 
+every byte we have stored and pulling a handful of byte ranges.
 
 ### The Table Format: Iceberg
 
