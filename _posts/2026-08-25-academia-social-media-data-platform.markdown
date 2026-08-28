@@ -67,7 +67,8 @@ One process reads the firehose, buffers what it parses, and commits batches to I
 
 Our S3 flushes happen at either 2 GB or 30 minutes, and given that we partition by date, 
 we're creating at least 48 files within a partition alone. This is a lot of small data files, plus 
-Iceberg metadata files that S3 has to store. In addition, duplicates are possible across runs.
+Iceberg metadata files that S3 has to store. More data files means higher querying latency, and more 
+metadata files means more storage costs. In addition, duplicates can appear across runs.
 
 Therefore, it is imperative that we have cron jobs running to dedup, compact, and delete post-compaction artifacts. 
 
